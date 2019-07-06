@@ -26,6 +26,7 @@
 #include <sensor_msgs/image_encodings.h>
 
 #include <jetson-utils/gstCamera.h>
+#include <jetson-utils/cudaNormalize.h>
 
 #include "image_converter.h"
 
@@ -67,7 +68,10 @@ bool aquireFrame()
 		ROS_ERROR("failed to resize camera image converter");
 		return false;
 	}
-
+	
+	cudaMemcpy(camera_cvt->ImageGPU(), imgRGBA, camera_cvt->GetSize(),cudaMemcpyDeviceToDevice); 
+    	CUDA(cudaDeviceSynchronize());
+	
 	// populate the message
 	sensor_msgs::Image msg;
 
