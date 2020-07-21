@@ -70,6 +70,14 @@ bool aquireFrame()
 		return false;
 	}
 
+	// header
+	static uint32_t seq = 0;
+	static const char* frame_id = camera->GetResource().c_str();
+	msg.header.seq = seq;
+	msg.header.stamp = ros::Time::now();
+	msg.header.frame_id = frame_id;
+	seq++;
+
 	// publish the message
 	camera_pub->publish(msg);
 	ROS_INFO("published camera frame");
