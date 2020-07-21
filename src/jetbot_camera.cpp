@@ -94,17 +94,31 @@ int main(int argc, char **argv)
 	/*
 	 * retrieve parameters
 	 */
-	std::string camera_device = "0";	// MIPI CSI camera by default
+	std::string camera_device = "csi://0";	// MIPI CSI camera by default
+	// width and height should be of uint32_t, but XML supports signed integers only
+	int width = 1280, height = 720;
+	float framerate = 30.0;
 
 	private_nh.param<std::string>("device", camera_device, camera_device);
-	
-	ROS_INFO("opening camera device %s", camera_device.c_str());
+	private_nh.param("width", width, width);
+	private_nh.param("height", height, height);
+	private_nh.param("framerate", framerate, framerate);
 
-	
+	ROS_INFO("opening camera device %s @ %dx%d %ffps", camera_device.c_str(), width, height, framerate);
+
+
 	/*
 	 * open camera device
 	 */
-	camera = gstCamera::Create(camera_device.c_str());
+	videoOptions opt;
+
+	opt.resource = camera_device;
+	opt.width = width;
+	opt.height = height;
+	opt.frameRate = framerate;
+	opt.ioType = videoOptions::INPUT;
+
+	camera = gstCamera::Create(opt);
 
 	if( !camera )
 	{
