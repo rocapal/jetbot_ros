@@ -25,6 +25,8 @@
 #include <sensor_msgs/Image.h>
 #include <sensor_msgs/image_encodings.h>
 
+#include <image_transport/image_transport.h>
+
 #include <jetson-utils/gstCamera.h>
 
 #include "image_converter.h"
@@ -35,7 +37,7 @@
 gstCamera* camera = NULL;
 
 imageConverter* camera_cvt = NULL;
-ros::Publisher* camera_pub = NULL;
+image_transport::Publisher* camera_pub = NULL;
 
 
 // aquire and publish camera frame
@@ -124,9 +126,10 @@ int main(int argc, char **argv)
 
 
 	/*
-	 * advertise publisher topics
+	 * advertise publisher topics using image transport to support JPEG compression
 	 */
-	ros::Publisher camera_publisher = private_nh.advertise<sensor_msgs::Image>("raw", 2);
+	image_transport::ImageTransport it(private_nh);
+	image_transport::Publisher camera_publisher = it.advertise("raw", 2);
 	camera_pub = &camera_publisher;
 
 
