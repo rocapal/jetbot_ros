@@ -12,6 +12,8 @@ from std_msgs.msg import String
 def set_speed(motor_ID, value):
 	max_pwm = 115.0
 	speed = int(min(max(abs(value * max_pwm), 0), max_pwm))
+	# slow it down
+	speed = int(speed / 1.6)
 
 	if motor_ID == 1:
 		motor = motor_left
