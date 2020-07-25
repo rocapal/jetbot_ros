@@ -117,6 +117,7 @@ int main(int argc, char **argv)
 	opt.height = height;
 	opt.frameRate = framerate;
 	opt.ioType = videoOptions::INPUT;
+	opt.flipMethod = videoOptions::FLIP_ROTATE_180;
 
 	camera = gstCamera::Create(opt);
 
