@@ -78,6 +78,7 @@ bool aquireFrame()
 
 	// publish the message
 	camera_pub->publish(msg);
+	//ROS_INFO("published frame");
 	ROS_DEBUG("published camera frame");
 	return true;
 }
@@ -86,6 +87,29 @@ bool aquireFrame()
 // node main loop
 int main(int argc, char **argv)
 {
+	// Accept --width --height --fps
+	
+	//printf("ARGC: %d\n", argc);
+	//printf("%s\n", argv[1]);
+
+	int width = 640, height = 480;
+	float framerate = 30.0;
+
+	for (int i=1; i<argc; i++ ){
+		
+		if (strcmp("--width",argv[i])==0 && i+1<argc) {
+			width = atoi(argv[i+1]);
+		}
+
+		if (strcmp("--height",argv[i])==0 && i+1<argc){
+                        height = atoi(argv[i+1]);
+		}
+
+		if (strcmp("--fps",argv[i])==0 && i+1<argc) {
+                        framerate = atof(argv[i+1]);
+		}
+	}
+
 	ros::init(argc, argv, "jetbot_camera");
  
 	ros::NodeHandle nh;
@@ -95,9 +119,6 @@ int main(int argc, char **argv)
 	 * retrieve parameters
 	 */
 	std::string camera_device = "csi://0";	// MIPI CSI camera by default
-	// width and height should be of uint32_t, but XML supports signed integers only
-	int width = 1280, height = 720;
-	float framerate = 30.0;
 
 	private_nh.param<std::string>("device", camera_device, camera_device);
 	private_nh.param("width", width, width);

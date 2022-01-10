@@ -1,6 +1,7 @@
 # jetbot_ros
 ROS nodes and Gazebo model for NVIDIA JetBot with Jetson Nano
 
+NOTE: modified to support width, height and fps by command line.
 
 ## System Configuration
 
@@ -202,6 +203,12 @@ To begin streaming the JetBot camera, start the `jetbot_camera` node:
 
 ```bash
 $ rosrun jetbot_ros jetbot_camera
+```
+
+To begin streaming with specific configuration (resolution and fps), run next command:
+
+```bash
+$ rosrun jetbot_ros jetbot_camera --width 800 --height 600 --fps 20
 ```
 
 The video frames will be published to the `/jetbot_camera/raw` topic as [`sensor_msgs::Image`](http://docs.ros.org/melodic/api/sensor_msgs/html/msg/Image.html) messages with BGR8 encoding.  To test the camera feed, install the [`image_view`](http://wiki.ros.org/image_view?distro=melodic) package and then subscribe to `/jetbot_camera/raw` from a new terminal:
