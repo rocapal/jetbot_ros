@@ -5,7 +5,7 @@ import time
 from Adafruit_MotorHAT import Adafruit_MotorHAT
 from std_msgs.msg import String
 
-
+import numpy as np
 
 
 # sets motor speed between [-1.0, 1.0]
@@ -51,21 +51,22 @@ def on_cmd_str(msg):
 	rospy.loginfo(rospy.get_caller_id() + ' cmd_str=%s', msg.data)
 
 	if msg.data.lower() == "left":
-		set_speed(motor_left_ID,  -1.0)
-		set_speed(motor_right_ID,  1.0) 
+		set_speed(motor_left_ID,    1.0/3)
+		set_speed(motor_right_ID,  -1.0/3) 
 	elif msg.data.lower() == "right":
-		set_speed(motor_left_ID,   1.0)
-		set_speed(motor_right_ID, -1.0) 
+		set_speed(motor_left_ID,   -1.0/3)
+		set_speed(motor_right_ID,   1.0/3) 
 	elif msg.data.lower() == "forward":
-		set_speed(motor_left_ID,   1.0)
-		set_speed(motor_right_ID,  1.0)
+		set_speed(motor_left_ID,   -1.0/3)
+		set_speed(motor_right_ID,  -1.0/3)
 	elif msg.data.lower() == "backward":
-		set_speed(motor_left_ID,  -1.0)
-		set_speed(motor_right_ID, -1.0)  
+		set_speed(motor_left_ID,   1.0/3)
+		set_speed(motor_right_ID,  1.0/3)  
 	elif msg.data.lower() == "stop":
 		all_stop()
 	else:
 		rospy.logerror(rospy.get_caller_id() + ' invalid cmd_str=%s', msg.data)
+
 
 
 # initialization
@@ -75,7 +76,7 @@ if __name__ == '__main__':
 	motor_driver = Adafruit_MotorHAT(i2c_bus=1)
 
 	motor_left_ID = 1
-	motor_right_ID = 2
+        motor_right_ID = 2
 
 	motor_left = motor_driver.getMotor(motor_left_ID)
 	motor_right = motor_driver.getMotor(motor_right_ID)
